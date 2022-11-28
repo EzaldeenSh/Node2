@@ -33,7 +33,7 @@ public class ObjectValidator {
         return true;
     }
     boolean intChecker(Type objectType, Type schemaType){
-        if((objectType.equals(Integer.class) || (objectType.equals(Long.class))) && ( schemaType.equals(Long.class) || schemaType.equals(Integer.class))){
+        if ((objectType.equals(Integer.class) || (objectType.equals(Long.class))) && ( schemaType.equals(Long.class) || schemaType.equals(Integer.class))){
             return true;
         } return false;
     }

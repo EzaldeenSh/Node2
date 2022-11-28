@@ -34,24 +34,24 @@ public class ClientHandler implements Runnable{
     public void run() {
         Node thisNode;
         NodesDaoUser nodesDaoUser;
-        try {
-            nodesDaoUser = NodesDaoUser.getInstance();
-            thisNode = nodesDaoUser.getNode("node2");
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
-        }
+        nodesDaoUser = NodesDaoUser.getInstance();
+        thisNode = Node.getInstance();
+
         try{
             System.out.println("Client being handled");
-            System.out.println(thisNode.toString());
-            thisNode.setNumberOfConnectedUsers(thisNode.getNumberOfConnectedUsers() + 1);
-            nodesDaoUser.updateNodeStatus(thisNode);
             String username = (String) fromClient.readObject();
             String password = (String) fromClient.readObject();
 
             boolean validation = new ClientValidator().validateClient(new User(username , password));
             toClient.writeObject(validation);
-            if(!validation) {
+
+            if (validation) {
+                thisNode.setNumberOfConnectedUsers(thisNode.getNumberOfConnectedUsers() + 1);
+                nodesDaoUser.updateNodeStatus(thisNode);
+            }
+            else {
                 System.out.println("Not validated");
+                client.close();
                 return;
             }
 
@@ -132,8 +132,7 @@ public class ClientHandler implements Runnable{
                         JSONObject jsonObject = (JSONObject) fromClient.readObject();
                         boolean result;
                         String owner = new OwnershipHandler().getCollectionOwner(databaseName ,collectionName);
-                        if(owner.equals("node2")){
-
+                        if(owner.equals(thisNode.getNodeID())){
                             result = jsonFunctions.writeDocument(databaseName , collectionName , jsonObject);
                             if (result){
                                 Message message = new Message();
@@ -256,8 +255,6 @@ public class ClientHandler implements Runnable{
                 nodesDaoUser.updateNodeStatus(thisNode);
             }
             System.out.println("Service is Over");
-
-
         } catch (IOException e ){
             System.out.println("IOException");
             e.printStackTrace();

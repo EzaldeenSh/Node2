@@ -19,7 +19,7 @@ public class Server {
         try {
             ServerSocket serverSocket = new ServerSocket(8082);
             serverSocket.setReuseAddress(true);
-            System.out.println("server.Server Started!");
+            System.out.println("Server Started!");
 
             while(true){
                 Socket client = serverSocket.accept();
@@ -40,6 +40,7 @@ public class Server {
                     System.out.println("Invalid connection attempt");
                 }
             }
+
 
         } catch (IOException e) {
 

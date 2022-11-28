@@ -24,6 +24,7 @@ public class UsersDaoUser implements UsersDao{
             User currentUser = new User( currentJson.get("username").toString(), currentJson.get("password").toString());
             users.add(currentUser);
         }
+
         return users;
     }
 
@@ -32,8 +33,9 @@ public class UsersDaoUser implements UsersDao{
         JSONObject userJson = new JSONObject();
         userJson.put("username" , username);
         userJson.put("password" , password);
-        return jsonFunctions.writeDocument("admin" , "users" , userJson);
+        return jsonFunctions.writeDocument("users" , "usersInfo" , userJson);
     }
+
     @Override
     public boolean exists(User user) throws IOException, ParseException {
         List<User> allUsers = findAll();
@@ -42,5 +44,6 @@ public class UsersDaoUser implements UsersDao{
                 return true;
         }
         return false;
+
     }
 }
