@@ -22,15 +22,20 @@ public class Client1 {
         PortGetter portGetter = new PortGetter(toBootstrap, fromBootstrap);
         UserGetter userGetter = new UserGetter(toBootstrap , fromBootstrap);
         User myUser = userGetter.requestUser();
-        System.out.println(myUser.toString());
         int portNumber = portGetter.requestPortNumber();
         System.out.println("Port number is: "+portNumber);
         bootstrapClient.close();
-
+        System.out.println("bootstrapClient is closed");
         ObjectInputStream fromServer;
         ObjectOutputStream toServer;
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
         try (Socket client = new Socket("localhost", portNumber)) {
+            System.out.println("connected to " + portNumber);
             Scanner sc = new Scanner(System.in);
             toServer = new ObjectOutputStream(client.getOutputStream());
             fromServer = new ObjectInputStream(client.getInputStream());
